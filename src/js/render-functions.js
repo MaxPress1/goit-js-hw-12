@@ -24,7 +24,7 @@ export function createGallery(images) {
     </li>
     `).join("");
 
-    galleryList.innerHTML = markup;
+    galleryList.insertAdjacentHTML("beforeend", markup);
 
     lightbox.refresh();
 };
@@ -48,5 +48,19 @@ export function hideLoader() {
     const loader = document.querySelector(".loader");
     if (loader) {
         loader.classList.add("visible");
+    }
+};
+
+export function showLoadMoreButton() {
+    const btnLoadMore = document.querySelector('.btn-load');
+    if (btnLoadMore) {
+        btnLoadMore.classList.remove("visible");
+    }
+};
+
+export function hideLoadMoreButton() {
+    const btnLoadMore = document.querySelector('.btn-load');
+    if (btnLoadMore) {
+        btnLoadMore.classList.add("visible");
     }
 };
