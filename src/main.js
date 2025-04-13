@@ -65,8 +65,6 @@ async function onLoadMore() {
         const data = await getImagesByQuery(query, page);
         let lengthArr = 15 * page;
         createGallery(data.hits);
-        hideLoader();
-        showLoadMoreButton();
         if (lengthArr >= data.totalHits) {
             hideLoadMoreButton();
             iziToast.show({
@@ -88,5 +86,9 @@ async function onLoadMore() {
                 message: error.message,
                 position: "topRight",
             });
+    }
+    finally {
+        hideLoader();
+        showLoadMoreButton();
     }
 };
