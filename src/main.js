@@ -46,6 +46,7 @@ async function handleSubmit(event) {
 
     }
     catch (error) {
+        hideLoadMoreButton();
         iziToast.error({
             message: error.message,
             position: "topRight",
