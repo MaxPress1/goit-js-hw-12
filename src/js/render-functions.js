@@ -39,7 +39,7 @@ export function clearGallery() {
 export function showLoader() {
     const loader = document.querySelector(".loader");
     if (loader) {
-        loader.classList.remove("visible");
+        loader.classList.remove("hidden");
     }
 };
 
@@ -47,20 +47,20 @@ export function showLoader() {
 export function hideLoader() {
     const loader = document.querySelector(".loader");
     if (loader) {
-        loader.classList.add("visible");
+        loader.classList.add("hidden");
     }
 };
 
 export function showLoadMoreButton() {
     const btnLoadMore = document.querySelector('.btn-load');
     if (btnLoadMore) {
-        btnLoadMore.classList.remove("visible");
+        btnLoadMore.classList.remove("hidden");
     }
 };
 
 export function hideLoadMoreButton() {
     const btnLoadMore = document.querySelector('.btn-load');
     if (btnLoadMore) {
-        btnLoadMore.classList.add("visible");
+        btnLoadMore.classList.add("hidden");
     }
 };

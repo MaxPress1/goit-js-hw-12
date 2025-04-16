@@ -5,28 +5,28 @@ import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 const form = document.querySelector('form');
-
 const loadBtn = document.querySelector('.btn-load');
 
 form.addEventListener('submit', handleSubmit);
 loadBtn.addEventListener('click', onLoadMore);
 
-let page;
+let pageNumber;
 let query = '';
+
+
 
 async function handleSubmit(event) {
     event.preventDefault();
-    showLoader();
-    let query = form.elements["search-text"].value.trim();
-    if (!form.elements["search-text"].value) {
+    query = form.elements["search-text"].value.trim();
+    if (!query) {
         return;
-    }
-    
+    }    
+    showLoader();
     clearGallery();
 
     try {
-        page = 1;
-        const response = await getImagesByQuery(query, page);
+        pageNumber = 1;
+        const response = await getImagesByQuery(query, pageNumber);
         const hits = response.hits;
 
         if (hits.length === 0) {
@@ -61,17 +61,17 @@ async function handleSubmit(event) {
 async function onLoadMore() {
     showLoader();
     hideLoadMoreButton();
-    page++;
+    pageNumber++;
     try {
-        const data = await getImagesByQuery(query, page);
-        let lengthArr = 15 * page;
+        const data = await getImagesByQuery(query, pageNumber);
+        let lengthArr = 15 * pageNumber;
         createGallery(data.hits);
         if (lengthArr >= data.totalHits) {
-            hideLoadMoreButton();
             iziToast.show({
                 message: "We're sorry, but you've reached the end of search results.",
                 position: "topRight",
-            })
+            });
+            hideLoadMoreButton();
         }
 
         const card = document.querySelector('li');
@@ -93,3 +93,4 @@ async function onLoadMore() {
         showLoadMoreButton();
     }
 };
+
