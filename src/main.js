@@ -10,8 +10,9 @@ const loadBtn = document.querySelector('.btn-load');
 form.addEventListener('submit', handleSubmit);
 loadBtn.addEventListener('click', onLoadMore);
 
-let pageNumber;
+let pageNumber = 1;
 let query = '';
+let totalHits = 0;
 
 
 
@@ -28,13 +29,14 @@ async function handleSubmit(event) {
         pageNumber = 1;
         const response = await getImagesByQuery(query, pageNumber);
         const hits = response.hits;
+        totalHits = response.totalHits;
 
         if (hits.length === 0) {
             throw new Error('Sorry, there are no images matching your search query. Please try again!');
         }
         createGallery(hits);
 
-        if (hits.length < response.totalHits) {
+        if (hits.length < totalHits) {
             showLoadMoreButton();
         } else {
             hideLoadMoreButton();
@@ -62,25 +64,33 @@ async function onLoadMore() {
     showLoader();
     hideLoadMoreButton();
     pageNumber++;
+
     try {
         const data = await getImagesByQuery(query, pageNumber);
-        let lengthArr = 15 * pageNumber;
+
         createGallery(data.hits);
-        if (lengthArr >= data.totalHits) {
+
+        const totalLoaded = document.querySelectorAll('.gallery-item').length;
+        
+        if (totalLoaded >= totalHits) {
             iziToast.show({
                 message: "We're sorry, but you've reached the end of search results.",
                 position: "topRight",
             });
             hideLoadMoreButton();
+        } else {
+            showLoadMoreButton();
         }
 
-        const card = document.querySelector('li');
-        const cardHeight = card.getBoundingClientRect().height;
-        window.scrollBy({
-            left: 0,
-            top: cardHeight * 2,
-            behavior: "smooth"
-        });
+        const newItems = document.querySelectorAll('.gallery-item');
+        if (newItems.length > 0) {
+            const lastItem = newItems[newItems.length - 15] || newItems[0]; // остання порція або fallback
+            const itemTop = lastItem.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({
+                top: itemTop,
+                behavior: 'smooth'
+            });
+        }
     }
     catch (error) {
         iziToast.error({
@@ -90,7 +100,6 @@ async function onLoadMore() {
     }
     finally {
         hideLoader();
-        showLoadMoreButton();
     }
 };
 
